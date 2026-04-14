@@ -29,16 +29,8 @@ export async function register(req, res) {
     is_verified: false
   });
 
-  try {
-    await createAndSendOtp(email);
-    return res.json({ message: 'Registered, OTP sent' });
-  } catch (error) {
-    if (process.env.ALLOW_REGISTER_WITHOUT_OTP === 'true') {
-      await supabase.from('users').update({ is_verified: true }).eq('email', email);
-      return res.json({ message: 'Registered successfully. OTP email is temporarily unavailable.' });
-    }
-    throw error;
-  }
+  await createAndSendOtp(email);
+  return res.json({ message: 'Registered, OTP sent' });
 }
 
 export async function verifyOtp(req, res) {
