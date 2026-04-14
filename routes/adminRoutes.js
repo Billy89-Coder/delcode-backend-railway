@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { asyncHandler } from '../middleware/asyncHandler.js';
 import {
   adminLogoutDevice,
   analytics,
@@ -14,13 +15,13 @@ import { requireAdmin, requireAuth } from '../middleware/authMiddleware.js';
 const router = Router();
 
 router.use(requireAuth, requireAdmin);
-router.get('/users', listUsers);
-router.patch('/users/:userId/status', updateUserStatus);
-router.delete('/users/:userId', deleteUser);
-router.get('/analytics', analytics);
-router.get('/login-devices', listLoginDevices);
-router.delete('/login-devices/:deviceId', adminLogoutDevice);
-router.get('/scan-policy', getScanResultPolicy);
-router.patch('/scan-policy', updateScanResultPolicy);
+router.get('/users', asyncHandler(listUsers));
+router.patch('/users/:userId/status', asyncHandler(updateUserStatus));
+router.delete('/users/:userId', asyncHandler(deleteUser));
+router.get('/analytics', asyncHandler(analytics));
+router.get('/login-devices', asyncHandler(listLoginDevices));
+router.delete('/login-devices/:deviceId', asyncHandler(adminLogoutDevice));
+router.get('/scan-policy', asyncHandler(getScanResultPolicy));
+router.patch('/scan-policy', asyncHandler(updateScanResultPolicy));
 
 export default router;
